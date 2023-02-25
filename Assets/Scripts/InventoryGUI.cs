@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InventoryGUI : MonoBehaviour
 {
-    public List<GameObject> items;
+    public List<GameObject> Items;
 
     // Start is called before the first frame update
     void Start()
@@ -15,12 +15,13 @@ public class InventoryGUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void IncrementItem(Item.VegetableType itemType)
     {
-        CountGUI cg = items[(int)itemType].GetComponent<CountGUI>();
+        CountGUI cg = Items[(int)itemType].GetComponent<CountGUI>();
         cg.UpdateCount();
     }
 }
+

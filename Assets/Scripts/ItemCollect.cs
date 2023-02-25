@@ -1,7 +1,7 @@
-using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 public class ItemCollect : NetworkBehaviour
 {
@@ -28,23 +28,22 @@ public class ItemCollect : NetworkBehaviour
         {
             return;
         }
-        if(itemCollider && Input.GetKeyDown(KeyCode.Space))
+
+        if (itemCollider && Input.GetKeyDown(KeyCode.Space))
         {
             Debug.Log("Space bar and item collected");
             Item item = itemCollider.gameObject.GetComponent<Item>();
             AddToInventory(item);
-            //ItemCollected?.Invoke(item.typeOfVeggie);
             PrintInventory();
 
             CmdItemCollected(item.typeOfVeggie);
         }
-
     }
 
     [Command]
     void CmdItemCollected(Item.VegetableType itemType)
     {
-        Debug.Log("CommandItemCollected:" + itemType);
+        Debug.Log("CommandItemCollect: " + itemType);
         RpcItemCollected(itemType);
     }
 
@@ -54,6 +53,22 @@ public class ItemCollect : NetworkBehaviour
         ItemCollected?.Invoke(itemType);
     }
 
+    private void AddToInventory(Item item)
+    {
+        ItemInventory[item.typeOfVeggie]++;
+    }
+
+    private void PrintInventory()
+    {
+        string output = "";
+
+        foreach (KeyValuePair<Item.VegetableType, int> kvp in ItemInventory)
+        {
+            output += string.Format("{0}: {1} ", kvp.Key, kvp.Value);
+        }
+        Debug.Log(output);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (!isLocalPlayer)
@@ -61,11 +76,9 @@ public class ItemCollect : NetworkBehaviour
             return;
         }
 
-        if (other.CompareTag("Item") )
+        if (other.CompareTag("Item"))
         {
             itemCollider = other;
-
-            
         }
     }
 
@@ -80,21 +93,5 @@ public class ItemCollect : NetworkBehaviour
         {
             itemCollider = null;
         }
-    }
-
-    private void AddToInventory(Item item)
-    {
-        ItemInventory[item.typeOfVeggie]++;
-    }
-
-    private void PrintInventory()
-    {
-        string output = "";
-
-        foreach (KeyValuePair<Item.VegetableType, int> kvp in ItemInventory)
-        {
-            output += string.Format("{0}: {1}", kvp.Key, kvp.Value);
-        }
-        Debug.Log(output);
     }
 }
