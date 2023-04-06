@@ -2,14 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Experimental.Rendering;
-
 
 public class Patrol : MonoBehaviour
 {
     public List<GameObject> waypoints;
     private NavMeshAgent agent;
-    private const float WP_THRESHOLD = 5.0f;
+    private const float WP_THESHOLD = 6.0f;
     private GameObject currentWP;
     private int currentWPIndex = -1;
 
@@ -21,10 +19,10 @@ public class Patrol : MonoBehaviour
     }
 
     GameObject GetNextWaypoint()
-    { 
+    {
         currentWPIndex++;
 
-        if(currentWPIndex == waypoints.Count)
+        if (currentWPIndex == waypoints.Count)
         {
             currentWPIndex = 0;
         }
@@ -35,10 +33,10 @@ public class Patrol : MonoBehaviour
     // Update is called once per frame
     public void PatrolWaypoints()
     {
-        if (Vector3.Distance(transform.position, currentWP.transform.position) < WP_THRESHOLD)
+        if (Vector3.Distance(transform.position, currentWP.transform.position) < WP_THESHOLD)
         {
             currentWP = GetNextWaypoint();
-            agent.SetDestination(waypoints[0].transform.position);
+            agent.SetDestination(currentWP.transform.position);
         }
     }
 }

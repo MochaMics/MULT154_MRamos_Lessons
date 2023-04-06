@@ -1,8 +1,7 @@
-using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using UnityEngine.Networking;
+using Mirror;
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -21,11 +20,7 @@ public class PlayerMovement : NetworkBehaviour
 
         rbPlayer = GetComponent<Rigidbody>();
         spawnPoints = GameObject.FindGameObjectsWithTag("Respawn");
-
-
     }
-
-
 
     // Update is called once per frame
     private void Update()
@@ -48,9 +43,11 @@ public class PlayerMovement : NetworkBehaviour
             return;
         }
 
+
+
         rbPlayer.AddForce(direction * speed, ForceMode.Force);
 
-        if(transform.position.z > 40)
+        if (transform.position.z > 40)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y, 40);
         }
@@ -62,27 +59,15 @@ public class PlayerMovement : NetworkBehaviour
     private void Respawn()
     {
         int index = 0;
-        while(Physics.CheckBox(spawnPoints[index].transform.position, new Vector3(1.5f, 1.5f, 1.5f)))
+        while (Physics.CheckBox(spawnPoints[index].transform.position, new Vector3(1.5f, 1.5f, 1.5f)))
         {
             index++;
         }
+
         rbPlayer.MovePosition(spawnPoints[index].transform.position);
     }
 
-   /* private void OnTriggerStay(Collider other)
-    {
-        if (!isLocalPlayer)
-        {
-            return;
-        }
 
-        if (other.CompareTag("Item") && Input.GetKeyDown(KeyCode.Space))
-        {
-            Item item = other.gameObject.GetComponent<Item>();
-            AddToInventory(item);
-            PrintInventory();
-        }
-    }*/
 
     private void OnTriggerExit(Collider other)
     {

@@ -23,7 +23,6 @@ public class Bot : MonoBehaviour
     public GameObject target;
     public GameObject[] hidingSpots;
     private Rigidbody rbBody;
-    //public BMode mode;
 
     float currentSpeed
     {
@@ -51,17 +50,17 @@ public class Bot : MonoBehaviour
     public void Pursue()
     {
         Vector3 targetDir = target.transform.position - this.transform.position;
+        /*
+                float relativeHeading = Vector3.Angle(this.transform.forward, this.transform.TransformVector(target.transform.forward));
 
-        /*float relativeHeading = Vector3.Angle(this.transform.forward, this.transform.TransformVector(target.transform.forward));
+                float toTarget = Vector3.Angle(this.transform.forward, this.transform.TransformVector(targetDir));
 
-        float toTarget = Vector3.Angle(this.transform.forward, this.transform.TransformVector(targetDir));
-
-        if ((toTarget > 90 && relativeHeading < 20) || currentSpeed < 0.01f)
-        {
-            Seek(target.transform.position);
-            return;
-        }*/
-
+                if ((toTarget > 90 && relativeHeading < 20) || currentSpeed < 0.01f)
+                {
+                    Seek(target.transform.position);
+                    return;
+                }
+        */
         float lookAhead = targetDir.magnitude / (agent.speed + currentSpeed);
         Seek(target.transform.position + target.transform.forward * lookAhead);
     }
@@ -100,7 +99,7 @@ public class Bot : MonoBehaviour
 
         for (int i = 0; i < hidingSpots.Length; i++)
         {
-            Vector3 hideDir =hidingSpots[i].transform.position - target.transform.position;
+            Vector3 hideDir = hidingSpots[i].transform.position - target.transform.position;
             Vector3 hidePos = hidingSpots[i].transform.position + hideDir.normalized * 10;
 
             if (Vector3.Distance(this.transform.position, hidePos) < dist)
@@ -123,7 +122,7 @@ public class Bot : MonoBehaviour
 
         for (int i = 0; i < hidingSpots.Length; i++)
         {
-            Vector3 hideDir =hidingSpots[i].transform.position - target.transform.position;
+            Vector3 hideDir = hidingSpots[i].transform.position - target.transform.position;
             Vector3 hidePos = hidingSpots[i].transform.position + hideDir.normalized * 100;
 
             if (Vector3.Distance(this.transform.position, hidePos) < dist)
@@ -149,8 +148,10 @@ public class Bot : MonoBehaviour
     public bool CanSeeTarget()
     {
         RaycastHit raycastInfo;
-        Vector3 rayToTarget = target.transform.position - this.transform.position;
-        if (Physics.Raycast(this.transform.position, rayToTarget, out raycastInfo))
+        Vector3 targetXZPos = new Vector3(target.transform.position.x, 1.5f, target.transform.position.z);
+        Vector3 thisXZPos = new Vector3(transform.position.x, 1.5f, transform.position.z);
+        Vector3 rayToTarget = targetXZPos - thisXZPos;
+        if (Physics.Raycast(thisXZPos, rayToTarget, out raycastInfo))
         {
             if (raycastInfo.transform.gameObject.tag == "Player")
                 return true;
@@ -161,9 +162,7 @@ public class Bot : MonoBehaviour
     public bool CanTargetSeeMe()
     {
         RaycastHit raycastInfo;
-        /*Vector3 targetFwdWS = target.transform.TransformDirection(target.transform.forward);
-        Debug.DrawRay(target.transform.position, targetFwdWS * 10);
-        Debug.DrawRay(target.transform.position, target.transform.forward * 10, Color.green);*/
+
         if (Physics.Raycast(target.transform.position, target.transform.forward, out raycastInfo))
         {
             if (raycastInfo.transform.gameObject == gameObject)
@@ -172,26 +171,8 @@ public class Bot : MonoBehaviour
         return false;
     }
 
-    // Update is called once per frame
-    /*void Update()
+    public void Stop()
     {
-        switch(mode)
-        {
-            case BMode.SEEK:
-                Seek(target.transform.position);
-                break;
-            case BMode.PURSUE:
-                Pursue();
-                break;
-            case BMode.FLEE:
-                Flee(target.transform.position);
-                break;
-            case BMode.EVADE:
-                Evade();
-                break;
-            case BMode.WANDER:
-                Wander();
-                break;
-        }           
-    }*/
+        agent.isStopped = true;
+    }
 }

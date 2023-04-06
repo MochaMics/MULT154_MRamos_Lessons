@@ -5,6 +5,7 @@ using TMPro;
 
 public class UIUpdate : MonoBehaviour
 {
+
     TextMeshProUGUI textGUI;
 
     // Start is called before the first frame update

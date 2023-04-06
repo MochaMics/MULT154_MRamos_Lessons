@@ -15,7 +15,7 @@ public class HivePickUp : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
             HivePickedUp?.Invoke();
             gameObject.SetActive(false);
@@ -27,4 +27,5 @@ public class HivePickUp : MonoBehaviour
         transform.position = postion;
         gameObject.SetActive(true);
     }
+
 }

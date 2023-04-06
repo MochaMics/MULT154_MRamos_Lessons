@@ -24,4 +24,3 @@ public class InventoryGUI : MonoBehaviour
         cg.UpdateCount();
     }
 }
-
